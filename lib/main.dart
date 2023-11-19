@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quizzler/quiz_brain.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 void main() => runApp(Quizzler());
 
@@ -51,7 +52,29 @@ class _QuizPageState extends State<QuizPage> {
           ),
         );
       }
-      quizBrain.nextQuestion();
+      if (quizBrain.isFinished()) {
+        Alert(
+          context: context,
+          type: AlertType.info,
+          title: 'QUIZ FINISHED!!!',
+          desc: 'You reached the last question! Press the button to restart',
+          buttons: [
+            DialogButton(
+              child: Text('RESTART'),
+              onPressed: () {
+                Navigator.pop(context);
+                setState(() {
+                  scoreKeeper = [];
+                  quizBrain.reset();
+                });
+              },
+              width: 120,
+            ),
+          ],
+        ).show();
+      } else {
+        quizBrain.nextQuestion();
+      }
     });
   }
 
